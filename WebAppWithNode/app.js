@@ -11,15 +11,10 @@ const server =  http.createServer(function(req, res){
             }else{
                 res.write(data)
             }
-        loadStyle()
         res.end()
     })
 })
-function loadStyle () {
-    var currentSheet = document.getElementById("stylesheet")
 
-    currentSheet.href = stylez;
-  }
 
 
 server.listen(port, function(error){
