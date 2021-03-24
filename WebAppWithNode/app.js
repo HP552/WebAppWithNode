@@ -3,19 +3,36 @@ const fs = require('fs')
 const port = 2000
 
 const server =  http.createServer(function(req, res){
-    res.writeHead(200,{'Content-Type': 'text/html'})
-    fs.readFile('./content.html', null, function(error, data){
-        if(error){
-            res.writeHead(404)
-            res.write('File not found!')
-            }else{
-                res.write(data)
-            }
-        res.end()
-    })
+    var content = selectTheRightRessource(req.url)
+    console.log(content + "MOIN")
+    if(content.IsSuccess){        
+        res.writeHead(200,{'Content-Type': 'text/html'})
+    }else{
+        res.writeHead(404,{'Content-Type': 'text/plain'})        
+    }
+    res.write(content.content)
+    res.end()    
 })
 
+function selectTheRightRessource(url){
+    var fileName
+    if(url=== "/"){
+        fileName = './content.html'
+    }else{
+        fileName = "." + url
+    }
 
+    var fileResult = fs.readFileSync(fileName, null, function(error, data){
+        
+        if(error){
+            return {IsSuccess:false, message:"file not found"}
+        }else{
+            return {IsSuccess:true, message:data}
+        }
+    })
+    return fileResult.
+    
+}
 
 server.listen(port, function(error){
     if(error){
