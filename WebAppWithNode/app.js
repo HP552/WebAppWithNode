@@ -2,9 +2,32 @@ const http = require('http')
 const fs = require('fs')
 const port = 2000
 
-const server =  http.createServer(function(req, res){
+const server = http.createServer((req, res)=>{
+    var fileName
+    if(req.url=== "/"){
+        fileName = './content.html'
+    }else{
+        fileName = "." + req.url
+    }
+
+    fs.readFile(fileName, null, function(error, data){
+        
+        if(error){
+            res.writeHead(404,{'Content-Type': 'text/plain'})   
+        }else{
+            res.writeHead(200,{'Content-Type': 'text/html'})
+            res.write(data)
+        }
+        res.end()
+    })
+
+
+})
+
+
+/*const server =  http.createServer(function(req, res){
     var content = selectTheRightRessource(req.url)
-    console.log(content + "MOIN")
+    //console.log(content + "MOIN")
     if(content.IsSuccess){        
         res.writeHead(200,{'Content-Type': 'text/html'})
     }else{
@@ -16,13 +39,14 @@ const server =  http.createServer(function(req, res){
 
 function selectTheRightRessource(url){
     var fileName
+
     if(url=== "/"){
         fileName = './content.html'
     }else{
         fileName = "." + url
     }
 
-    var fileResult = fs.readFileSync(fileName, null, function(error, data){
+    fs.readFileSync(fileName, null, function(error, data){
         
         if(error){
             return {IsSuccess:false, message:"file not found"}
@@ -30,9 +54,11 @@ function selectTheRightRessource(url){
             return {IsSuccess:true, message:data}
         }
     })
-    return fileResult.
+    
     
 }
+*/
+
 
 server.listen(port, function(error){
     if(error){
